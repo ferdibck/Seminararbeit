@@ -203,9 +203,6 @@ def multisimulation(x, y, p, n):
 
     plot(x, y, p, n, resultset)
 
-
-
-
 x = 10
 y = 10
 n = 10
