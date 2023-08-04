@@ -80,17 +80,17 @@ class Grid:
                 ypos = V[y][x].Γ()[1]
 
                 if V[y][x].ω() == 1:
-                    ax.plot(xpos, ypos, "o", markersize = 10, color = "#1E3888")
+                    ax.plot(xpos, ypos, "o", markersize = 5, color = "red")
                 else:
-                    ax.plot(xpos, ypos, "o", markersize = 10, color = "#FFBA59")
+                    ax.plot(xpos, ypos, "o", markersize = 5, color = "black")
         
         for i in range(len(E)):
             xpos = E[i].Δx()
             ypos = E[i].Δy()
-            ax.plot(xpos, ypos, linewidth = 2, color = "#1E3888")
+            ax.plot(xpos, ypos, linewidth = 2, color = "red")
 
-        plt.xticks(range(1,len(V[0])+1))
-        plt.yticks(range(1,len(V)+1))
+        plt.xticks(range(1,len(V[0])+1), fontsize = 24)
+        plt.yticks(range(1,len(V)+1), fontsize = 24)
         plt.grid(True)
         plt.show()
             
@@ -203,10 +203,14 @@ def multisimulation(x, y, p, n):
 
     plot(x, y, p, n, resultset)
 
-x = 10
+"""x = 10
 y = 10
 n = 10
 
 p = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1]
 
-multisimulation(10,10,p,20)
+multisimulation(10,10,p,20)"""
+
+r = Grid(4,4,0.6)
+
+r.visual()
