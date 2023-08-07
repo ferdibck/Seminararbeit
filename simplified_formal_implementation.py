@@ -2,6 +2,9 @@ import random as rd
 import matplotlib.pyplot as plt
 from matplotlib.colors import ListedColormap
 import numpy as np
+import sys
+
+sys.setrecursionlimit(1000000)
 
 class Vertex:
     state = None
@@ -14,6 +17,9 @@ class Vertex:
 
     def set_neighbours(self, n):
         self.neighbours = n
+
+    def ret_neighbours(self):
+        return self.neighbours
 
     def ω(self):
         return self.state
@@ -37,23 +43,67 @@ class Grid:
 
         for y in range(ymax):
             for x in range(xmax):
-                if x == 0 and y == 0:
-                    grid[y][x].set_neighbours((grid[y][x+1], grid[y+1][x], None, None))
-                elif x == xmax-1 and y == ymax-1:
-                    grid[y][x].set_neighbours((None, None, grid[y-1][x], grid[y][x-1]))
-                elif x == 0:
-                    grid[y][x].set_neighbours((grid[y][x+1], grid[y+1][x], grid[y-1][x], None))
-                elif x == xmax-1:
-                    grid[y][x].set_neighbours((None, grid[y+1][x], grid[y-1][x], grid[y][x-1]))
-                elif y == 0:
-                    grid[y][x].set_neighbours((grid[y][x+1], grid[y+1][x], None, grid[y][x-1]))
-                elif y == ymax-1:
-                    grid[y][x].set_neighbours((grid[y][x+1], None, grid[y-1][x], grid[y][x-1]))
-                else: 
-                    grid[y][x].set_neighbours((grid[y][x+1], grid[y+1][x], grid[y][x-1], grid[y-1][x]))
+                vertex = grid[y][x]
+                neighbours = []
+
+                if x < xmax - 1:
+                    neighbours.append(grid[y][x+1])
+
+                if y < ymax - 1:
+                    neighbours.append(grid[y+1][x])
+
+                if y > 0:
+                    neighbours.append(grid[y-1][x])
+                
+
+                if x > 0:
+                    neighbours.append(grid[y][x-1])
+
+                
+
+                vertex.set_neighbours(neighbours)
 
         self.grid = grid
         self.probablities = probabilities
+
+    def search(self):
+        grid = self.grid
+        xmax = self.xmax
+        ymax = self.ymax
+
+        S = np.empty([ymax],dtype=object)
+        Z = np.empty([ymax],dtype=object)
+
+        for y in range(ymax):
+            S[y] = grid[y][0]
+            Z[y] = grid[y][xmax-1]
+
+        Clusters = []
+        visited = set()
+
+        def dfs(vertex, cluster):
+            visited.add(vertex)
+            
+            neighbours = vertex.ret_neighbours()
+
+            for n in neighbours:
+                if n not in visited and n.ω() == 1:
+                    dfs(n, cluster)
+
+            cluster.append(vertex)
+
+            for c in cluster:
+                for z in Z:
+                    if c == z:
+                        return True
+
+        for vertex in grid[0]:
+            if vertex not in visited:
+                cluster = []
+                dfs(vertex, cluster)
+                Clusters.append(cluster)
+
+        # print(Clusters)
 
     def plot(self):
         grid = self.grid
@@ -74,6 +124,8 @@ class Grid:
 
         plt.show()
 
-g = Grid(5,5,0.5)
+g = Grid(100,100,0.6)
 
 g.plot()
+
+g.search()
