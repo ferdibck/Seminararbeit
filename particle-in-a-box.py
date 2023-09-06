@@ -17,9 +17,9 @@ def plot_topf(a):
     plt.fill_between(x, y, 0, color = "blue", alpha = 0.1)
 
     #Visuell
-    plt.xlabel("x")
-    plt.ylabel("V(x)")
-    plt.title("Unendlich hoher Potentialtopf")
+    plt.xlabel("x", fontsize = 15)
+    plt.ylabel("V(x)", fontsize = 15)
+    plt.title("Unendlich hoher Potentialtopf", fontsize = 15)
     plt.xlim(-10, a+10)
     plt.ylim(-1, 10)
     plt.yticks([0])
