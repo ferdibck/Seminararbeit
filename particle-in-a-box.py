@@ -2,21 +2,29 @@ import matplotlib.pyplot as plt
 import numpy as np
 import math
 
-#plt.rcParams['text.usetex'] = True
+"""
+plt.rcParams['text.usetex'] = True
+plt.rcParams['font.family'] = "serif"
+plt.rcParams['font.serif'] = ["Times New Roman"]
+"""
 
 def V(x, a):
     if 0 < x < a:
         return 0
     else:
         return 100
-    
+
+
 def psi(x, n, a):
     if x <= 0 or x >= a:
         return 0
-    else: return math.sqrt(2/a)*np.sin((n*math.pi)/a * x)
+    else:
+        return math.sqrt(2/a)*np.sin((n*math.pi)/a * x)
+
 
 def E(x, n, m, a):
-    return (6.626* 10**(-34))/(8*m*a**2)* n**2
+    return (6.626 * 10**(-34))/(8*m*a**2) * n**2
+
 
 def plot_topf(a):
     x = np.linspace(-10, a+10, 1000)
@@ -27,8 +35,8 @@ def plot_topf(a):
     y = [V(xi, a) for xi in x]
 
     # Kasten
-    plt.plot(x, y, color = "blue", alpha=1.00)
-    plt.fill_between(x, y, 0, color = "blue", alpha = 0.1)
+    plt.plot(x, y, color="blue", alpha=1.00)
+    plt.fill_between(x, y, 0, color="blue", alpha=0.1)
 
     """
     # Wellenfunktion
@@ -41,11 +49,13 @@ def plot_topf(a):
     for n in n_values:
         E_values = [E(xi, n, 9.11*10**(-31), a) for xi in x2]
         plt.plot(x2, E_values, label=f"n = {n}")
+        plt.text(x2[0] - 7, E_values[0], f"{E_values[0]:.2e}", fontsize=12, verticalalignment='center')
 
     # Visuell
-    plt.xlabel("x", fontsize = 15)
-    plt.ylabel("V(x)", fontsize = 15)
-    plt.title("Unendlich hoher Potentialtopf", fontsize = 15)
+
+    plt.xlabel("x", fontsize=15)
+    plt.ylabel("E / J", fontsize=15)
+    plt.title("Diskrete Energiewerte im Potentialtopf", fontsize=15)
     plt.xlim(-10, a+10)
     #plt.ylim(-1, 10)
     plt.ylim(0, (1+0.1)*E(0, n_values[-1], 9.11*10**(-31), a))
@@ -55,8 +65,9 @@ def plot_topf(a):
     ax = plt.subplot()
     ax.spines[["right", "top"]].set_visible(False)
     ax.set_xticks([0, a])
-    ax.set_xticklabels(["0", "a"]) 
+    #ax.set_xticklabels(["0", "a"])
 
     plt.show()
+
 
 plot_topf(20)
