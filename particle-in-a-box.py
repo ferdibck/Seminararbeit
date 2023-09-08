@@ -30,8 +30,8 @@ def plot_topf(a):
     plt.plot(x, y, color = "blue", alpha=1.00)
     plt.fill_between(x, y, 0, color = "blue", alpha = 0.1)
 
-    # Wellenfunktion
     """
+    # Wellenfunktion
     for n in n_values:
         psi_values = [psi(xi, n, a) for xi in x]
         plt.plot(x, psi_values, label=f"ψ_{n}(x)")
