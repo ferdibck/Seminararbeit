@@ -24,15 +24,20 @@ class vertex:
     return self.Gamma
   
   def get_edges(self):
+    edges = []
     neighbors = self.neighbours
-    edges = [n for n in neighbors if n is not None and n.get_omega() == 1]
+    if len(neighbors) != 0:
+      possible_edges = [n for n in neighbors if n is not None]
+      edges = [n for n in possible_edges if n.get_omega() == 1 or n.get_omega() == 0]
     return edges
+  
+  def set_omega(self, o):
+    self.omega = o
+  
 class lattice:
   V = None
 
-  def __init__(self, x, y, p):
-    probabilities = [p, 1-p]
-
+  def __init__(self, x, y):
     V = np.empty((x, y), dtype=object)
 
     for xi in range(0, x):
@@ -41,7 +46,7 @@ class lattice:
 
     for xi in range(0, x):
       for yi in range(0, y):
-        omega = random.choices([1, 0], probabilities, k=1)[0]
+        omega = random.choices([1, 2, 0], k=1)[0]
         Gamma = (xi, yi)
 
         if xi == 0 and yi == 0:  # links-unten
@@ -67,6 +72,10 @@ class lattice:
 
     self.V = V
 
+  def hopping(self):
+    return
+    
+
   def visual(self):
     V = self.V
 
@@ -79,53 +88,39 @@ class lattice:
 
         # Knoten
         if V[xi][yi].get_omega() == 1:
-          ax.plot(xi, yi, "o", markersize=5, color="red")
+          ax.plot(xi, yi, "o", markersize=20, color="black", fillstyle = "left")
+        elif V[xi][yi].get_omega() == 2:
+          ax.plot(xi, yi, "o", markersize=20, color = "black", fillstyle = "full")
         else:
-          ax.plot(xi, yi, "o", markersize=5, color="black")
+          ax.plot(xi, yi, "o", markersize=20, color="black", fillstyle = "none")
 
         # Kanten
+        """
         if xi > 0 and V[xi][yi].get_omega() == 1 and V[xi-1][yi].get_omega() == 1:
           ax.plot([xi, xi - 1], [yi, yi], color="red")
         if yi > 0 and V[xi][yi].get_omega() == 1 and V[xi][yi-1].get_omega() == 1:
           ax.plot([xi, xi], [yi, yi - 1], color="red")
+        """
 
     plt.xticks(range(0, len(V[0])), fontsize=24)
     plt.yticks(range(0, len(V)), fontsize=24)
     plt.grid(True)
     plt.show()
 
-  def random_walk(self, n):
+  def update(self, p):
     V = self.V
-    coordinates = [(0, 0)]
-    x_values = [0]
-    y_values = [0]
 
-    for ni in range(n):
-      x, y = coordinates[-1]
-      edges = V[x, y].get_edges()
-      vertex = random.choice(edges)
-      x, y = vertex.get_Gamma()
-      coordinates.append((x, y))
-      x_values.append(x)
-      y_values.append(y)
+    for xi in range(len(V)):
+      for yi in range(len(V[0])):
+        possible_neighbours = V[xi][yi].get_edges()
 
-    x0, y0 = coordinates[0]
-    x1, y1 = coordinates[-1]
+        yes_no = random.uniform(0, 1)
 
-    dist = np.sqrt((x1 - x0) ** 2 + (y1 - y0) ** 2)
+        if yes_no < p and len(possible_neighbours) != 0:
+          hopped_to = random.choice(possible_neighbours)
+          hopped_to.set_omega(hopped_to.get_omega() + 1)
 
-    fig, ax = plt.subplots()
-    ax.set_aspect('equal')
-    ax.plot(x_values, y_values, marker='o', markersize=5, color='blue', label='Random Walk')
-    ax.plot(x0, y0, marker='o', markersize=5, color='green', label='Start')
-    ax.plot(x1, y1, marker='o', markersize=5, color='red', label='End')
-    ax.legend()
-    plt.xticks(range(0, len(V[0])), fontsize=24)
-    plt.yticks(range(0, len(V)), fontsize=24)
-    plt.grid(True)
-    plt.show()
-
-    return dist
-
-l = lattice(5, 5, 0.7)
-l.visual()
+for n in range(10):
+  l = lattice(5, 5)
+  l.visual()
+  l.update(0.5)
