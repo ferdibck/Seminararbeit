@@ -9,16 +9,17 @@ class walker:
   steps = []
 
   def __init__(self, v):
-    v.set_walker = True
+    v.set_walker(True)  # Korrigiere set_walker
     self.start = v.get_Gamma()
     self.curr.append(v.get_Gamma())
     self.vertex = v
 
   def update(self, v):
-    v.set_walker = True
-    self.vertex.set_walker = False
-    self.vetex = v
-    self.curr.append(v.get_Gamma())
+    if not v.get_walker():
+      self.vertex.set_walker(False)
+      v.set_walker(True)
+      self.curr.append(v.get_Gamma())
+      self.vertex = v
 
   def get_vertex(self):
     return self.vertex
@@ -32,10 +33,8 @@ class walker:
   def calc_avg_t(self):
     steps = self.steps
 
-    for i in range(len(steps)):
-      sum =+ i
-
-    return sum/len(steps)
+    # Korrigiere die Berechnung des Durchschnitts
+    return sum(steps) / len(steps)
   
   def go_to(self):
     edges = self.vertex.get_edges()
@@ -53,7 +52,7 @@ class vertex:
     self.omega = None
     self.Gamma = (None, None)
     self.neighbours = [None, None, None, None]
-    self.contain_walker == False
+    self.contain_walker = False  # Korrigiere contain_walker
 
   def set_properties(self, o, g, n):
     self.omega = o
@@ -68,10 +67,8 @@ class vertex:
   
   def get_edges(self):
     edges = []
-
-    if self.omega == 1:
-      neighbours = self.neighbours
-      edges = [n for n in neighbours if n is not None and n.get_omega() == 1]
+    neighbours = self.neighbours
+    edges = [n for n in neighbours if n is not None and n.get_omega() == 1]
 
     return edges
   
@@ -79,7 +76,7 @@ class vertex:
     edges = []
     neighbors = self.neighbours
     possible_edges = [n for n in neighbors if n != None]
-    edges = [e for e in possible_edges if (e.get_omega() == 1 and e.get_walker()== False and self.omega == 1)]
+    edges = [e for e in possible_edges if (e.get_omega() == 1 and e.get_walker() == False and self.omega == 1)]
     return edges
   
   def set_omega(self, o):
@@ -142,10 +139,10 @@ class lattice:
       
       for w in walkers:
         vertex = w.get_vertex()
-        go_to = w.go_to()
+        go_to = vertex.get_walker_edges()
 
-        if go_to != []:
-          new_vertex = random.choices(go_to)[0]
+        if len(go_to) != 0:
+          new_vertex = random.choice(go_to)
           w.update(new_vertex)
           w.append_steps(ti)
 
@@ -177,42 +174,28 @@ class lattice:
         if yi > 0 and V[xi][yi].get_omega() == 1 and V[xi][yi-1].get_omega() == 1:
           ax.plot([xi, xi], [yi, yi - 1], color="red")
     
-    walkers = self.random_walk(1)
+    walkers = self.random_walk(1)  # Ändern Sie die Anzahl der Schritte nach Bedarf
     colors = ["blue", "yellow", "orange", "green", "cyan", "magenta"]
 
     for i, walker in enumerate(walkers):
 
-      # Punkte
-      color = colors[i % 5]
-      values = walker.get_curr()
-      x_values, y_values = zip(*values)
-      plt.plot(x_values, y_values, "x", color=color)
+        # Punkte
+        color = colors[i % 6]  # Anzahl der Farben anpassen
+        values = walker.get_curr()
+        x_values, y_values = zip(*values)
+        plt.plot(x_values, y_values, "x", color=color, label=f'Walker {i+1}')
 
-      # Pfeile
-      for j in range(len(values) - 1):
-        plt.arrow(x_values[j], y_values[j], x_values[j+1] - x_values[j], y_values[j+1] - y_values[j],
-        head_width=0.15, head_length=0.15, fc=color, ec=color, alpha=0.7)
-
+        # Pfeile
+        for j in range(len(values) - 1):
+            plt.arrow(x_values[j], y_values[j], x_values[j + 1] - x_values[j], y_values[j + 1] - y_values[j],
+                      head_width=0.15, head_length=0.15, fc=color, ec=color, alpha=0.7)
 
     plt.xticks(range(0, len(V[0])), fontsize=24)
     plt.yticks(range(0, len(V)), fontsize=24)
     plt.grid(True)
+    plt.legend()
     plt.show()
 
-L = lattice(5, 5, 0.7)
+L = lattice(5,5, 0.7)
 
-# Visualize the initial lattice
-L.visualize()
-
-# Get a walker
-walkers = L.random_walk(1)  # Use a different variable name (walkers) here
-
-# Get the walker's current vertex
-walker = walkers[0]  # Use a different variable name (walker) here
-current_vertex = walker.get_vertex()
-
-# Modify the walker's current vertex
-current_vertex.set_omega(0)
-
-# Visualize the lattice after the modification
 L.visualize()

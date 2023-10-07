@@ -176,7 +176,6 @@ class lattice:
   def calc_D(self, t):
     walker_list = self.random_walk(t)
 
-    """
     sum_of_dists = 0
 
     for w in walker_list:
@@ -192,11 +191,11 @@ class lattice:
 
     avg_dist = sum_of_dists/len(walker_list)
     
-    D = avg_dist/(2*2*t)
+    D = avg_dist**2/(2*2*t)
 
-    print(D)
+    return D
+
     """
-
     time_intervals_sum = 0
     squared_step_size = 0
     n = 0
@@ -216,6 +215,9 @@ class lattice:
         dx = xvalues[j] - xvalues[j-1]
         dy = yvalues[j] - yvalues[j-1]
         squared_step_size += dx**2 + dy**2
+
+    if time_intervals_sum == 0:
+      return 0
     
     avg_time_interval = time_intervals_sum/t
     avg_squared_step_size = squared_step_size/t
@@ -223,6 +225,7 @@ class lattice:
     D = avg_squared_step_size/avg_time_interval
     
     return D
+    """
   
   def calc_sigma(self, t, T):
     V = self.V
@@ -263,5 +266,23 @@ class lattice:
     plt.grid(True)
     plt.show()
 
-l = lattice(150, 150, 0.4)
-l.calc_sigma(150, 273)
+# Define a range of p values to test
+p_values = np.linspace(0.0, 1, 20)  # Adjust the range as needed
+
+# Initialize an empty list to store sigma values
+sigma_values = []
+
+# Loop through different p values and calculate sigma
+for p in p_values:
+    l = lattice(250, 250, p)
+    sigma = l.calc_sigma(2500, 273)
+    sigma_values.append(sigma)
+
+# Create the plot
+plt.figure(figsize=(8, 6))
+plt.plot(p_values, sigma_values, marker='o', linestyle='-')
+plt.xlabel('p')
+plt.ylabel('Sigma (σ)')
+plt.title('Sigma vs. p')
+plt.grid(True)
+plt.show()
