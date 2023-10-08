@@ -197,6 +197,7 @@ class lattice:
     plt.xticks(range(0, len(V[0])), fontsize=12)
     plt.yticks(range(0, len(V)), fontsize=12)
     plt.grid(True)
+    plt.savefig("4x4, 0.6 (Beispiel).png", dpi = 300)
     plt.show()
 
   def visualize_random_walk(self, walker_list):
@@ -292,10 +293,8 @@ class lattice:
     plt.grid(True)
     plt.show()
 
-L = lattice(15, 15, 0.7)
-list = L.random_walk(15, 5)
-L.animate_random_walk(list)
-L.visualize_random_walk(list)
+L = lattice(4, 4, 0.6)
+L.visualize()
 
 
 """
