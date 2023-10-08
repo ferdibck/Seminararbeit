@@ -202,7 +202,7 @@ class lattice:
   def visualize_random_walk(self, walker_list):
     V = self.V
 
-    fig, ax = plt.subplots()
+    fig, ax = plt.subplots(figsize=(10, 6))
     ax.set_aspect('equal')
 
     # Knoten
@@ -232,17 +232,20 @@ class lattice:
       plt.plot(xvalues, yvalues, "o", color=c, markersize=15, label=f'Walker {i+1}',alpha = 0.4)
       plt.plot(xvalues, yvalues, "-", color=c, linewidth=2, alpha = 0.4)
 
-    ax.legend(fontsize=12, bbox_to_anchor=(1.05, 1), loc='upper left')
+    ax.legend(fontsize=12, bbox_to_anchor=(1.05, 1), loc=2)
       
+    fig.tight_layout()
+    
     plt.xticks(range(0, len(V[0])), fontsize=12)
     plt.yticks(range(0, len(V)), fontsize=12)
     plt.grid(True)
+    plt.savefig("random-walk-auf-dem-raster.png", dpi = 300)
     plt.show()
 
   def animate_random_walk(self, walker_list):
     V = self.V
 
-    fig, ax = plt.subplots()
+    fig, ax = plt.subplots(figsize=(10, 6))
     ax.set_aspect('equal')
 
     for xi in range(len(V)):
@@ -282,7 +285,7 @@ class lattice:
 
     t = len(walker_list[0].get_pos_at_t())
     ani = FuncAnimation(fig, update, frames=t, interval= 1000, blit=True)
-    ani.save("walk.gif", writer='pillow')
+    ani.save("random-walk-auf-dem-raster.gif", writer='pillow', dpi = 300)
       
     plt.xticks(range(0, len(V[0])), fontsize=12)
     plt.yticks(range(0, len(V)), fontsize=12)
@@ -290,8 +293,9 @@ class lattice:
     plt.show()
 
 L = lattice(15, 15, 0.7)
-list = L.random_walk(5, 4)
+list = L.random_walk(15, 5)
 L.animate_random_walk(list)
+L.visualize_random_walk(list)
 
 
 """
