@@ -142,32 +142,32 @@ class lattice:
   def calc_D(self, walker_list):
     sum_of_dists = 0
 
-    t = len(walker_list[0].get_pos_at_t())-1
+    t = len(walker_list[0].get_pos_at_t())
 
     for w in walker_list:
-      x0, y0 = w.get_pos_at_step()[0]
-      xt, yt = w.get_pos_at_step()[-1]
+      x0, y0 = w.get_pos_at_t()[0]
+      xt, yt = w.get_pos_at_t()[-1]
 
       dx = xt - x0
       dy = yt - y0
 
-      dist = np.sqrt(dx**2 + dy**2)
+      dist = dx**2 + dy**2
       
       sum_of_dists += dist
 
     avg_dist = sum_of_dists/len(walker_list)
     
-    D = avg_dist**2/(2*2*t)
+    D = avg_dist/(2*2*t)
 
     return D
   
-  def calc_sigma(self, walker_list, T, t):
+  def calc_sigma(self, walker_list, T):
     V = self.V
 
     n = len(V[0])/(self.x * self.y)
     q = 1.6 * 10**(-19)
     kb = 1.38 * 10**(-23)
-    D = self.calc_D(walker_list, t)
+    D = self.calc_D(walker_list)
 
     sigma = n*(q**2 / (kb*T))*D
     return sigma
@@ -264,21 +264,21 @@ class lattice:
     lines = []
 
     for i, w in enumerate(walker_list):
-        c = colors[i % 6]
-        values = w.get_pos_at_t()
-        xvalues, yvalues = zip(*values)
-        line, = plt.plot([], [], "o", color=c, markersize=15, label=f'Walker {i+1}', alpha=0.4)
-        lines.append(line)
+      c = colors[i % 6]
+      values = w.get_pos_at_t()
+      xvalues, yvalues = zip(*values)
+      line, = plt.plot([], [], "o", color=c, markersize=15, label=f'Walker {i+1}', alpha=0.4)
+      lines.append(line)
 
     ax.legend(fontsize=12, bbox_to_anchor=(1.05, 1), loc='upper left')
 
     def update(frame):
-        for i, w in enumerate(walker_list):
-            values = w.get_pos_at_t()[:frame+1]
-            xvalues, yvalues = zip(*values)
-            lines[i].set_data(xvalues, yvalues)
-        plt.title(f't={frame}')
-        return lines
+      for i, w in enumerate(walker_list):
+        values = w.get_pos_at_t()[frame]
+        xvalues, yvalues = values
+        lines[i].set_data(xvalues, yvalues)
+      plt.title(f't={frame}')
+      return lines
 
     t = len(walker_list[0].get_pos_at_t())
     ani = FuncAnimation(fig, update, frames=t, interval= 1000, blit=True)
@@ -288,3 +288,45 @@ class lattice:
     plt.yticks(range(0, len(V)), fontsize=12)
     plt.grid(True)
     plt.show()
+
+L = lattice(15, 15, 0.7)
+list = L.random_walk(5, 4)
+L.animate_random_walk(list)
+
+
+"""
+# x, y - Größe des Rasters - int
+# p - Wahrscheinlichkeit - [0, 1]
+# t - Anzahl an Schritten
+# T - Temparatur
+# n - Anzahl an Simulationen
+# w - Anzahl an Walkern
+
+x = 150
+y = 150
+p = 1
+t = 500
+T = 293
+n = 20
+w = 200
+
+def Sigma_gegen_p(n):
+  pvalues = np.linspace(0, 1, n)
+  sigmavalues = []
+
+  for p in pvalues:
+    L = lattice(x, y, p)
+    list = L.random_walk(t, w)
+    sigma = L.calc_sigma(list, 293)
+
+    sigmavalues.append(sigma)
+
+  plt.plot(pvalues, sigmavalues, marker='x', color='r')
+  plt.title("σ gegen p")
+  plt.xlabel("Wahrscheinlichkeit (p)")
+  plt.ylabel("Leitfähigkeit (σ)")
+  plt.grid(True)
+  plt.show()
+
+Sigma_gegen_p(40)
+"""

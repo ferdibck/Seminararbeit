@@ -144,10 +144,8 @@ class lattice:
       
     return walker_list
 
-  def calc_D(self, walker_list):
+  def calc_D(self, walker_list, t):
     sum_of_dists = 0
-
-    t = len(walker_list[0].get_pos_at_t())-1
 
     for w in walker_list:
       x0, y0 = w.get_pos_at_step()[0]
@@ -276,54 +274,38 @@ class lattice:
     plt.grid(True)
     plt.show()
 
-  def animate_random_walk(self, walker_list, output_file="random_walk_animation.gif"):
-    V = self.V
-    colors = ["blue", "yellow", "orange", "green", "cyan", "magenta"]
+# x, y - Größe des Rasters - int
+# p - Wahrscheinlichkeit - [0, 1]
+# t - Anzahl an Schritten
+# T - Temparatur
+# n - Anzahl an Simulationen
+# w - Anzahl an Walkern
 
-    fig, ax = plt.subplots()
-    ax.set_aspect('equal')
-    
-    step_text = ax.text(0.02, 0.95, '', transform=ax.transAxes, fontsize=12, color='black', backgroundcolor='white')
+x = 50
+y = 50
+p = 0.6
+t = 150
+T = 293
+n = 20
+w = 50
 
-    def update(frame):
-      ax.clear()
-      ax.set_aspect('equal')
+def D_gegen_t(t):
+  L = lattice(x, y, 1)
+  tvalues = []
+  Dvalues = []
 
-      # Knoten und Kanten
-      for xi in range(len(V)):
-        for yi in range(len(V[0])):
-          if V[xi][yi].get_omega() == 1:
-            ax.plot(xi, yi, "o", markersize=5, color="red")
-          else:
-            ax.plot(xi, yi, "o", markersize=5, color="black")
+  for ti in range(t):
+    list = L.random_walk(ti, w)
+    D = L.calc_D(list, ti)
 
-          if xi > 0 and V[xi][yi].get_omega() == 1 and V[xi-1][yi].get_omega() == 1:
-            ax.plot([xi, xi - 1], [yi, yi], color="red")
-          if yi > 0 and V[xi][yi].get_omega() == 1 and V[xi][yi-1].get_omega() == 1:
-            ax.plot([xi, xi], [yi, yi - 1], color="red")
+    tvalues.append(ti)
+    Dvalues.append(D)
 
-      # Walker
-      for i, w in enumerate(walker_list):
-        c = colors[i % 6]
-        values = w.get_pos_at_step()[:frame + 1]
-        xvalues, yvalues = zip(*values)
-        ax.plot(xvalues, yvalues, "x", color=c, markersize=15, label=f'Walker {i + 1}', alpha=0.7)
-        ax.plot(xvalues, yvalues, "-", color=c, linewidth=2, alpha=0.7)
-        
-      ax.legend(fontsize=12, bbox_to_anchor=(1.05, 1), loc='upper left')
-      plt.xticks(range(0, len(V[0])), fontsize=12)
-      plt.yticks(range(0, len(V)), fontsize=12)
-      plt.grid(True)
+  plt.plot(tvalues, Dvalues, marker='x', color='r')
+  plt.title("D gegen t")
+  plt.xlabel("Anzahl an Schritten (t)")
+  plt.ylabel("Diffusionskoeffizient (D)")
+  plt.grid(True)
+  plt.show()
 
-      step_text.set_text(f'Step: {frame + 1}')
-
-    frames = len(walker_list[0].get_time_at_step())
-    ani = FuncAnimation(fig, update, frames=frames, repeat=False)
-    ani.save(output_file, writer='pillow', fps=2)  # Adjust the fps as needed
-
-    plt.show()
-
-
-lattice_object = lattice(15, 15, 0.7)
-walker_list = lattice_object.random_walk(5, 3)
-lattice_object.animate_random_walk(walker_list)
+D_gegen_t(50)
