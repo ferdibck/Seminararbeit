@@ -199,7 +199,7 @@ class lattice:
     plt.yticks(range(0, len(V)), fontsize=12)
     plt.grid(True)
     plt.savefig("test.png", dpi = 300)
-    #plt.show()
+    plt.show()
 
   def visualize_random_walk(self, walker_list):
     V = self.V
