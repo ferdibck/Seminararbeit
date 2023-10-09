@@ -2,6 +2,7 @@ import numpy as np
 import random
 import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
+import pandas as pd
 
 class walker:
   vertex = None
@@ -293,11 +294,7 @@ class lattice:
     plt.grid(True)
     plt.show()
 
-L = lattice(4, 4, 0.6)
-L.visualize()
 
-
-"""
 # x, y - Größe des Rasters - int
 # p - Wahrscheinlichkeit - [0, 1]
 # t - Anzahl an Schritten
@@ -305,15 +302,15 @@ L.visualize()
 # n - Anzahl an Simulationen
 # w - Anzahl an Walkern
 
-x = 150
-y = 150
+x = 500
+y = 500
 p = 1
 t = 500
 T = 293
-n = 20
+n = 40
 w = 200
 
-def Sigma_gegen_p(n):
+def Sigma_gegen_p(n, name):
   pvalues = np.linspace(0, 1, n)
   sigmavalues = []
 
@@ -324,12 +321,8 @@ def Sigma_gegen_p(n):
 
     sigmavalues.append(sigma)
 
-  plt.plot(pvalues, sigmavalues, marker='x', color='r')
-  plt.title("σ gegen p")
-  plt.xlabel("Wahrscheinlichkeit (p)")
-  plt.ylabel("Leitfähigkeit (σ)")
-  plt.grid(True)
-  plt.show()
+  data = {"p": pvalues, "Sigma (σ)": sigmavalues}
+  df = pd.DataFrame(data)
+  df.to_csv(name, index = False)
 
-Sigma_gegen_p(40)
-"""
+Sigma_gegen_p(40, "simulation1.csv")
