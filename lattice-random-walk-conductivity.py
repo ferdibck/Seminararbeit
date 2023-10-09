@@ -198,8 +198,8 @@ class lattice:
     plt.xticks(range(0, len(V[0])), fontsize=12)
     plt.yticks(range(0, len(V)), fontsize=12)
     plt.grid(True)
-    plt.savefig("4x4, 0.6 (Beispiel).png", dpi = 300)
-    plt.show()
+    plt.savefig("test.png", dpi = 300)
+    #plt.show()
 
   def visualize_random_walk(self, walker_list):
     V = self.V
@@ -241,7 +241,7 @@ class lattice:
     plt.xticks(range(0, len(V[0])), fontsize=12)
     plt.yticks(range(0, len(V)), fontsize=12)
     plt.grid(True)
-    plt.savefig("random-walk-auf-dem-raster.png", dpi = 300)
+    plt.savefig("random-walk-auf-dem-raster.png", dpi = 1000)
     plt.show()
 
   def animate_random_walk(self, walker_list):
@@ -310,6 +310,9 @@ T = 293
 n = 40
 w = 200
 
+L = lattice(x, y, 0.4)
+L.visualize()
+
 def Sigma_gegen_p(n, name):
   pvalues = np.linspace(0, 1, n)
   sigmavalues = []
@@ -325,4 +328,4 @@ def Sigma_gegen_p(n, name):
   df = pd.DataFrame(data)
   df.to_csv(name, index = False)
 
-Sigma_gegen_p(40, "simulation1.csv")
+#Sigma_gegen_p(40, "simulation3.csv")
