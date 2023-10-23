@@ -27,7 +27,7 @@ def E(x, n, m, a):
 
 
 def plot_topf(a):
-    x = np.linspace(-10, a+10, 1000)
+    x = np.linspace(-1.2*a, 1.2*a, 1000000)
     x2 = np.linspace(0, a, 1000)
 
     n_values = [1, 2, 3, 4, 5, 6]
@@ -56,7 +56,8 @@ def plot_topf(a):
     plt.xlabel("x", fontsize=15)
     plt.ylabel("E / J", fontsize=15)
     plt.title("Diskrete Energiewerte im Potentialtopf", fontsize=15)
-    plt.xlim(-10, a+10)
+    #plt.xlim(-0.2 * a, 1.2 * a)
+    plt.xlim(-0.2*a, 1.2 * a)
     #plt.ylim(-1, 10)
     plt.ylim(0, (1+0.1)*E(0, n_values[-1], 9.11*10**(-31), a))
     plt.yticks([0])
@@ -70,4 +71,4 @@ def plot_topf(a):
     plt.show()
 
 
-plot_topf(20)
+plot_topf(10**(-10))
