@@ -74,7 +74,7 @@ class Walkermanager:
     self.p_tunneling = p_tunneling
     self.heatmap = None
   
-  def run_random_walk(self):
+  def random_walk(self):
     self.t = 0
     self.walkers = [Walker(self.t_max) for _ in range(self.n_walkers)]
 
@@ -175,7 +175,7 @@ class Simulation:
       #df.to_csv(f"simulation2_{sim+1}.csv", index = False)
 
   def calc_avg_dist_squared(self):
-    self.manager.run_random_walk()
+    self.manager.random_walk()
 
     sum_of_dists = 0
 
