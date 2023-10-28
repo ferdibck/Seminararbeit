@@ -31,10 +31,10 @@ class Lattice:
           east = self.V[xi+1][yi]
 
         if yi > 0:
-          south = self.V[xi][y-1]
+          south = self.V[xi][yi-1]
 
         if xi > 0:
-          west = self.V[xi-1][y]
+          west = self.V[xi-1][yi]
 
         neighbours = [north, east, south, west]
 
