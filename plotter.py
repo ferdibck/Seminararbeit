@@ -22,9 +22,9 @@ def plot_csv(files, x, y, name):
     plt.savefig(name, dpi = 300)
     plt.show()
 
-csv = "Simulationen\simulation1_1.csv"
-csv2 = "Simulationen\simulation1_2.csv"
-csv3 = "Simulationen\simulation1_3.csv"
+csv = "simulation2_1.csv"
+csv2 = "simulation2_2.csv"
+csv3 = "simulation2_3.csv"
 
 files = [csv, csv2, csv3]
 

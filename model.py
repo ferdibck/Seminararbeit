@@ -58,7 +58,7 @@ class Vertex:
     self.Gamma = Gamma
     self.omega = 0
     self.neighbours = [None, None, None]
-    self.num_walkers = 0
+    self.walkers = 0
 
   def get_edges(self):
     edges = [n for n in self.neighbours if (n is not None and n.omega == 1 and self.omega == 1)]
@@ -74,7 +74,11 @@ class Walkermanager:
   
   def run_random_walk(self):
     self.t = 0
-    self.walkers = [Walker(self.t_max)] * self.n_walkers
+    self.walkers = [Walker(self.t_max) for _ in range(self.n_walkers)]
+
+    for xi in range(self.lattice.x):
+      for yi in range(self.lattice.y):
+        self.lattice.V[xi][yi].walkers = 0
 
     self.initialize_walk()
     self.update(self.t)
@@ -108,9 +112,9 @@ class Walkermanager:
       yrand = random.randint(0, y_size - 1)
       vertex = self.lattice.V[xrand][yrand]
 
-      if vertex.num_walkers < 4:
+      if vertex.walkers < 4:
         walker.vertex = vertex
-        vertex.num_walkers += 1
+        vertex.walkers += 1
         self.heatmap[xrand][yrand] += 1
         assigned = True
 
@@ -128,13 +132,14 @@ class Walker:
     else:
       vertices = self.vertex.get_edges()
 
-    valid_vertices = [vertex for vertex in vertices if vertex and vertex.num_walkers < 4]
+    valid_vertices = [vertex for vertex in vertices if vertex and vertex.walkers < 4]
 
     if valid_vertices:
       new_vertex = random.choice(valid_vertices)
-      self.vertex.num_walkers -= 1
+      self.vertex.walkers -= 1
       self.vertex = new_vertex
-      self.vertex.num_walkers += 1
+      self.vertex.walkers += 1
+
 class Simulation:
   q = 1.6 * 10**(-19)
   k_B = 1.38 * 10**(-23)
@@ -153,10 +158,11 @@ class Simulation:
     self.p_tunneling = p_tunneling
   
   def run_simulation(self):
-    sigma_values = []
+    files = []
 
     for sim in range(self.num_sims):
       pvalues = np.linspace(0, 1, self.NUM_OF_P_VALUES)
+      sigma_values = []
 
       for p in pvalues:
         self.lattice.percolation_config(p)
@@ -164,9 +170,9 @@ class Simulation:
 
         sigma_values.append(sigma)
 
-    data = {"p": pvalues, "Sigma (σ)": sigma_values}
-    df = pd.DataFrame(data)
-    df.to_csv(f"simulation2_{sim}.csv", index = False)
+      data = {"p": pvalues, "Sigma (σ)": sigma_values}
+      df = pd.DataFrame(data)
+      df.to_csv(f"simulation2_{sim+1}.csv", index = False)
 
   def calc_avg_dist_squared(self):
     self.manager.run_random_walk()
@@ -203,14 +209,13 @@ class Simulation:
 
     return sigma
   
-
-x = 10
-y = 10
-num_walkers = 20
-num_steps = 5
+x = 200
+y = 200
+num_walkers = 500
+num_steps = 150
 num_sims = 3
 Temp = 293
-p_tunneling = 0.1
+p_tunneling = 0.05
 
 model = Simulation(x, y, num_walkers, num_steps, num_sims, Temp, p_tunneling)
 
