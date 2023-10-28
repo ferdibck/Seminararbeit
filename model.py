@@ -61,7 +61,7 @@ class Vertex:
     self.num_walkers = 0
 
   def get_edges(self):
-    edges = [n for n in self.neighbors if (n is not None and n.omega == 1 and self.omega == 1)]
+    edges = [n for n in self.neighbours if (n is not None and n.omega == 1 and self.omega == 1)]
     return edges
 
 class Walkermanager:
@@ -77,7 +77,7 @@ class Walkermanager:
     self.walkers = [Walker(self.t_max)] * self.n_walkers
 
     self.initialize_walk()
-    self.update_walkers(self.t)
+    self.update(self.t)
 
     for self.t in range(self.t_max):
       self.step()
@@ -156,7 +156,7 @@ class Simulation:
     sigma_values = []
 
     for sim in range(self.num_sims):
-      pvalues = np.linalg(0, 1, self.NUM_OF_P_VALUES)
+      pvalues = np.linspace(0, 1, self.NUM_OF_P_VALUES)
 
       for p in pvalues:
         self.lattice.percolation_config(p)
@@ -188,7 +188,7 @@ class Simulation:
     return avg_dist_squared
 
   def calc_D(self):
-    avg_dist_squared = self.calc_avg_dist()
+    avg_dist_squared = self.calc_avg_dist_squared()
 
     D = (avg_dist_squared) / (2 * 2 * self.num_steps)
 
@@ -203,6 +203,7 @@ class Simulation:
 
     return sigma
   
+
 x = 10
 y = 10
 num_walkers = 20
@@ -211,4 +212,6 @@ num_sims = 3
 Temp = 293
 p_tunneling = 0.1
 
-Simulation(x, y, num_walkers, num_steps, num_sims, Temp, p_tunneling)
+model = Simulation(x, y, num_walkers, num_steps, num_sims, Temp, p_tunneling)
+
+model.run_simulation()
