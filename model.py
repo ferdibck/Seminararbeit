@@ -202,3 +202,13 @@ class Simulation:
     sigma = n * (self.q**2) / (self.k_B * self.Temp) * D
 
     return sigma
+  
+x = 10
+y = 10
+num_walkers = 20
+num_steps = 5
+num_sims = 3
+Temp = 293
+p_tunneling = 0.1
+
+Simulation(x, y, num_walkers, num_steps, num_sims, Temp, p_tunneling)
