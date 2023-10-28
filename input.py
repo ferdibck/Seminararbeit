@@ -10,11 +10,11 @@ Inputvariablen:
 ▪️ p_tunneling; Tunnelwahrscheinlichkeit (s. Arbeit)
 """
 
-x = 10
-y = 10
-num_walkers = 20
-num_steps = 5
-num_sims = 3
+x = 100
+y = 100
+num_walkers = 200
+num_steps = 20
+num_sims = 1
 Temp = 293
 p_tunneling = 0.1
 

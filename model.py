@@ -1,6 +1,7 @@
 import numpy as np
 import random
 import pandas as pd
+import matplotlib.pyplot as plt
 
 class Lattice:
   # Konstruktor
@@ -71,6 +72,7 @@ class Walkermanager:
     self.t_max = t_max
     self.lattice = lattice
     self.p_tunneling = p_tunneling
+    self.heatmap = None
   
   def run_random_walk(self):
     self.t = 0
@@ -158,8 +160,6 @@ class Simulation:
     self.p_tunneling = p_tunneling
   
   def run_simulation(self):
-    files = []
-
     for sim in range(self.num_sims):
       pvalues = np.linspace(0, 1, self.NUM_OF_P_VALUES)
       sigma_values = []
@@ -168,11 +168,16 @@ class Simulation:
         self.lattice.percolation_config(p)
         sigma = self.calc_sigma()
 
+        plt.imshow(self.manager.heatmap, cmap='hot', interpolation='nearest')
+        plt.colorbar()
+        plt.title("Heatmap of Walker Assignments")
+        plt.show()
+
         sigma_values.append(sigma)
 
       data = {"p": pvalues, "Sigma (σ)": sigma_values}
       df = pd.DataFrame(data)
-      df.to_csv(f"simulation2_{sim+1}.csv", index = False)
+      #df.to_csv(f"simulation2_{sim+1}.csv", index = False)
 
   def calc_avg_dist_squared(self):
     self.manager.run_random_walk()
