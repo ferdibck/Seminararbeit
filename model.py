@@ -2,85 +2,116 @@ import numpy as np
 import random
 
 class Lattice:
-  V = None
-  x = 0
-  y = 0
-
   # Konstruktor
-  def __init__(self, x, y, p):
-    V = np.empty((x, y), dtype=object)
+  def __init__(self, x, y):
+    self.x = x
+    self.y = y
+    self.V = np.empty((x, y), dtype=object)
 
     # Array füllen
     for xi in range(x):
       for yi in range(y):
         Gamma = (xi, yi) # Position
 
-        V[xi][yi] = Vertex(Gamma)
+        self.V[xi][yi] = Vertex(Gamma)
 
     # Nachbarn definieren
     for xi in range(x):
       for yi in range(y):
-        north = V[xi][yi+1] if yi < y else None
-        east = V[xi+1][yi] if xi < x else None
-        south = V[xi][y-1] if yi > 0 else None
-        west = V[xi-1][y] if xi > 0 else None
+        north = self.V[xi][yi+1] if yi < y else None
+        east = self.V[xi+1][yi] if xi < x else None
+        south = self.V[xi][y-1] if yi > 0 else None
+        west = self.V[xi-1][y] if xi > 0 else None
 
         neighbours = [north, east, south, west]
 
-        V[xi][yi].set_neighbours(neighbours)
-
-    self.V = V
-    self.x = x
-    self.y = y
+        self.V[xi][yi].set_neighbours(neighbours)
 
   def percolation_config(self, p):
-    V = self.V
-    x = self.x
-    y = self.y
-
-    for xi in range(x):
-      for yi in range(y):
+    for xi in range(self.x):
+      for yi in range(self.y):
         omega = random.choices([1, 0], [p, 1-p], k=1)[0] # Offen / geschlossen
 
-        V[xi][yi].set_omega(omega)
+        self.V[xi][yi].set_omega(omega)
+    
+  def get_size(self):
+    return (self.x, self.y)
+  
+  def get_V(self):
+    return self.V
 
 class Vertex:
-  Gamma = (None, None)
-  omega = 0
-  neighbours = [None, None, None, None]
-  walkers = None
-
   def __init__(self, Gamma):
     self.Gamma = Gamma
+    self.omega = 0
+    self.neighbours = [None, None, None]
+    self.num_walkers = 0
 
   def set_neighbours(self, neighbours):
     self.neighbours = neighbours
 
   def set_omega(self, omega):
     self.omega = omega
-class Walkermanager:
-  walkers = None
-  t = 0 # Derzeitiger Schritt
-  t_max = 0
-  lattice = None
 
+  def set_walker(self, walker):
+    self.num_walkers += 1
+
+class Walkermanager:
   def __init__(self, n_walkers, t_max, lattice):
-    walkers = [Walker()] * n_walkers
-    
-    self.walkers = walkers
+    self.t = 0 # Derzeitiger Schritt
+    self.walkers = [Walker(t_max)] * n_walkers
     self.t_max = t_max
     self.lattice = lattice
   
   def run_random_walk(self):
-    print()
+    self.initialize_walk()
+    self.update_walkers(self.t)
+
+    for self.t in range(self.t_max):
+      self.step()
+      self.update(self.t)
+
+  def initialize_walk(self):
+    x, y = self.lattice.get_size()
+    self.heatmap = np.zeros((x, y))
+
+    for walker in self.walkers:
+      self.assign_walker(walker)
+  
+  def step(self):
+    random.shuffle(self.walkers)
+    for walker in self.walkers:
+      walker.move()
+
+  def update(self, t):
+    for walker in self.walkers:
+      walker.add_pos_at_t(t)
+
+  def assign_walker(self, walker):
+    x_size, y_size = self.lattice.get_size()
+    assigned = False
+
+    while not assigned:
+      xrand = random.randint(0, x_size - 1)
+      yrand = random.randint(0, y_size - 1)
+      vertex = self.lattice.get_V()[xrand][yrand]
+
+      if vertex.num_walkers < 4:
+        vertex.walkers.append(walker)
+        walker.vertex = vertex
+        self.heatmap[xrand][yrand] += 1
+        assigned = True
+
 class Walker:
-  vertex = None
-  pos_at_t = []
+  def __init__(self, t_max):
+    self.vertex = None
+    self.pos_at_t = [None] * t_max
 
-  def __init__(self):
-
+  def add_pos_at_t(self, t):
+    self.pos_at_t[t] = self.vertex.Gamma
 
 class Visualization:
+  print()
 
 class Simulation:
   lattice = None
@@ -121,5 +152,7 @@ class Simulation:
         manager.run_random_walk()
 
   def calc_sigma():
+    print()
   
   def calc_D():
+    print()
