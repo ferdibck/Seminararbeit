@@ -168,11 +168,6 @@ class Simulation:
         self.lattice.percolation_config(p)
         sigma = self.calc_sigma()
 
-        plt.imshow(self.manager.heatmap, cmap='hot', interpolation='nearest')
-        plt.colorbar()
-        plt.title("Heatmap of Walker Assignments")
-        plt.show()
-
         sigma_values.append(sigma)
 
       data = {"p": pvalues, "Sigma (σ)": sigma_values}
