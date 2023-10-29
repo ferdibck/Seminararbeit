@@ -10,13 +10,13 @@ Inputvariablen:
 ▪️ p_tunneling; Tunnelwahrscheinlichkeit (s. Arbeit)
 """
 
-x = 250
-y = 250
+x = 100
+y = 100
 num_walkers = 20
-num_steps = 500
+num_steps = 200
 num_sims = 3
 Temp = 293
-p_tunneling = 0.1
+p_tunneling = 0.05
 
 model = model.Simulation(x, y, num_walkers, num_steps, num_sims, Temp, p_tunneling)
 

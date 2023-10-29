@@ -209,24 +209,54 @@ class Simulation:
     self.Temp = Temp
     self.p_tunneling = p_tunneling
   
+  def run_simulations(self):
+    dfs = []
+
+    for _ in range(self.num_sims):
+      dfs.append(self.run_simulation())
+
+    return dfs
+  
+  def run_dir_simulations(self):
+    dfs = []
+
+    for _ in range(self.num_sims):
+      dfs.append(self.run_simulation())
+
+    return dfs
+  
+
   def run_simulation(self):
-    for sim in range(self.num_sims):
-      pvalues = np.linspace(0, 1, self.NUM_OF_P_VALUES)
-      sigma_values = []
+    p_values = np.linspace(0, 1, self.NUM_OF_P_VALUES)
+    sigma_values = []
 
-      for p in pvalues:
-        self.lattice.percolation_config(p)
-        sigma = self.calc_sigma()
+    for p in p_values:
+      self.lattice.percolation_config(p)
+      self.manager.random_walk()
+      sigma = self.calc_sigma() 
 
-        sigma_values.append(sigma)
+      sigma_values.append(sigma)
 
-      data = {"p": pvalues, "Sigma (σ)": sigma_values}
-      df = pd.DataFrame(data)
-      df.to_csv(f"simulation2_{sim+1}.csv", index = False)
+    data = {"p": p_values, "Sigma (σ)": sigma_values}
+    df = pd.DataFrame(data)
+    return df
+  
+  def run_dir_simulation(self):
+    p_values = np.linspace(0, 1, self.NUM_OF_P_VALUES)
+    sigma_values = []
+
+    for p in p_values:
+      self.lattice.percolation_config(p)
+      self.manager.directed_random_walk()
+      sigma = self.calc_sigma() 
+
+      sigma_values.append(sigma)
+
+    data = {"p": p_values, "Sigma": sigma_values}
+    df = pd.DataFrame(data)
+    return df
 
   def calc_avg_dist_squared(self):
-    self.manager.directed_random_walk()
-
     sum_of_dists = 0
 
     for walker in self.manager.walkers:
