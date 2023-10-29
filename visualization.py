@@ -59,7 +59,7 @@ def animate_random_walk(walkermanager):
       c = colors[i % 6]
       values = w.pos_at_t
       xvalues, yvalues = zip(*values)
-      line, = plt.plot([], [], "o", color=c, markersize=15, label=f'Walker {i+1}', alpha=0.4)
+      line, = plt.plot([], [], "o", color=c, markersize=5, label=f'Walker {i+1}', alpha=0.4)
       lines.append(line)
 
     ax.legend(fontsize=12, bbox_to_anchor=(1.05, 1), loc='upper left')
@@ -73,7 +73,7 @@ def animate_random_walk(walkermanager):
       return lines
 
     t = walkermanager.t_max
-    ani = FuncAnimation(fig, update, frames=t, interval= 1000, blit=True)
+    ani = FuncAnimation(fig, update, frames=t, interval= 500, blit=True)
     ani.save("random-walk.gif", writer='pillow', dpi = 300)
       
     plt.xticks(range(0, len(V[0])), fontsize=12)
@@ -122,5 +122,5 @@ def plot_random_walk(walkermanager):
   plt.xticks(range(0, len(V[0])), fontsize=12)
   plt.yticks(range(0, len(V)), fontsize=12)
   plt.grid(True)
-  plt.savefig("random-walk-auf-dem-raster.png", dpi = 300)
+  plt.savefig("random-walk.png", dpi = 300)
   plt.show()
