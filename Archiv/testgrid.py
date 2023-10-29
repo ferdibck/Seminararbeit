@@ -42,4 +42,4 @@ def grid(x, y, p):
     plt.show()
 
 
-grid(4, 4, 0.5)
+grid(15, 10, 0.7)
