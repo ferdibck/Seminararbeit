@@ -2,6 +2,7 @@ import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
 
 def plot_lattice(lattice):
+  plt.clf()
   V = lattice.V
 
   fig, ax = plt.subplots()
@@ -29,6 +30,7 @@ def plot_lattice(lattice):
   plt.show()
 
 def animate_random_walk(walkermanager):
+    plt.clf()
     V = walkermanager.lattice.V
     walker_list = walkermanager.walkers
 
