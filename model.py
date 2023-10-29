@@ -220,7 +220,7 @@ class Simulation:
     dfs = []
 
     for _ in range(self.num_sims):
-      dfs.append(self.run_simulation())
+      dfs.append(self.run_dir_simulation())
 
     return dfs
   

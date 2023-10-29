@@ -21,6 +21,6 @@ Temp = 293
 p_tunneling = 0.05
 
 model = model.Simulation(x, y, num_walkers, num_steps, num_sims, Temp, p_tunneling)
-dfs = model.run_simulations()
-plotter.plot_dfs(dfs)
+dfs = model.run_dir_simulations()
 plotter.save_dfs(dfs)
+plotter.plot_dfs(dfs) 

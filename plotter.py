@@ -9,7 +9,7 @@ def plot_dfs(dfs):
         xvalues = df.iloc[:, 0]
         yvalues = df.iloc[:, 1]
 
-        plt.plot(xvalues, yvalues, label=f"Simulation2_{i+1}", color=colors[color_index])
+        plt.plot(xvalues, yvalues, label=f"Simulation3_{i+1}", color=colors[color_index])
         
         color_index = (color_index + 1) % len(colors)
     
@@ -17,9 +17,9 @@ def plot_dfs(dfs):
     plt.ylabel("Leitfähigkeit (σ)")
     plt.grid(linestyle = ":")
     plt.legend()
-    plt.save("simulation2.png")
+    plt.savefig("simulation3.png", dpi = 300)
     plt.show()
 
 def save_dfs(dfs):
     for i, df in enumerate(dfs):
-        df.to_csv(f"simulation2_{i+1}", index = False)
+        df.to_csv(f"simulation3_{i+1}", index = False)
