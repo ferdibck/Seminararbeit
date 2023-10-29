@@ -12,15 +12,16 @@ Inputvariablen:
 ▪️ p_tunneling; Tunnelwahrscheinlichkeit (s. Arbeit)
 """
 
-x = 250
-y = 250
-num_walkers = 1000
-num_steps = 1000
-num_sims = 5
+x = 10
+y = x
+num_walkers = x*4
+num_steps = x*4
+num_sims = 3
 Temp = 293
-p_tunneling = 0.05
+p_tunneling = 0.01
+
 
 model = model.Simulation(x, y, num_walkers, num_steps, num_sims, Temp, p_tunneling)
 dfs = model.run_dir_simulations()
 plotter.save_dfs(dfs)
-plotter.plot_dfs(dfs) 
+plotter.plot_dfs(dfs)

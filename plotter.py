@@ -2,6 +2,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 def plot_dfs(dfs):
+    plt.clf()
     colors = ["b", "g", "r", "c", "m", "y", "k"] 
     color_index = 0
 

@@ -223,7 +223,6 @@ class Simulation:
       dfs.append(self.run_dir_simulation())
 
     return dfs
-  
 
   def run_simulation(self):
     p_values = np.linspace(0, 1, self.NUM_OF_P_VALUES)
