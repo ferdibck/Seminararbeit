@@ -64,6 +64,11 @@ class Vertex:
   def get_edges(self):
     edges = [n for n in self.neighbours if (n is not None and n.omega == 1 and self.omega == 1)]
     return edges
+  
+  def get_dir_edges(self):
+    neighbours = self.neighbours[0:3]
+    edges = [n for n in neighbours if (n is not None and n.omega == 1 and self.omega == 1)]
+    return edges
 
 class Walkermanager:
   def __init__(self, n_walkers, t_max, lattice, p_tunneling):
@@ -90,9 +95,6 @@ class Walkermanager:
       self.update(self.t)
 
   def initialize_walk(self):
-    x, y = self.lattice.get_size()
-    self.heatmap = np.zeros((x, y))
-
     for walker in self.walkers:
       self.assign_walker(walker)
   
@@ -117,8 +119,42 @@ class Walkermanager:
       if vertex.walkers < 4:
         walker.vertex = vertex
         vertex.walkers += 1
-        self.heatmap[xrand][yrand] += 1
         assigned = True
+  
+  def directed_random_walk(self):
+    self.t = 0
+    _, y = self.lattice.get_size()
+
+    self.walkers = []
+
+    for xi in range(self.lattice.x):
+      for yi in range(self.lattice.y):
+        self.lattice.V[xi][yi].walkers = 0
+
+    self.initialize_dir_walk()
+    self.update(self.t)
+
+    for self.t in range(self.t_max):
+      self.dir_step()
+      self.update(self.t)
+
+  def initialize_dir_walk(self):
+    x, y = self.lattice.get_size()
+    self.heatmap = np.zeros((x, y))
+
+    for yi in range(y):
+      vertex = self.lattice.V[0][yi]
+
+      for _ in range(4):
+        walker = Walker(self.t_max)
+        walker.vertex = vertex
+        vertex.walkers += 1
+        self.walkers.append(walker)
+
+  def dir_step(self):
+    random.shuffle(self.walkers)
+    for walker in self.walkers:
+      walker.dir_move(self.p_tunneling)
 
 class Walker:
   def __init__(self, t_max):
@@ -133,6 +169,20 @@ class Walker:
       vertices = self.vertex.neighbours
     else:
       vertices = self.vertex.get_edges()
+
+    valid_vertices = [vertex for vertex in vertices if vertex and vertex.walkers < 4]
+
+    if valid_vertices:
+      new_vertex = random.choice(valid_vertices)
+      self.vertex.walkers -= 1
+      self.vertex = new_vertex
+      self.vertex.walkers += 1
+
+  def dir_move(self, p_tunneling):
+    if self.vertex.omega == 0 and random.random() < p_tunneling:
+      vertices = self.vertex.neighbours[0:3]
+    else:
+      vertices = self.vertex.get_dir_edges()
 
     valid_vertices = [vertex for vertex in vertices if vertex and vertex.walkers < 4]
 
@@ -172,10 +222,10 @@ class Simulation:
 
       data = {"p": pvalues, "Sigma (σ)": sigma_values}
       df = pd.DataFrame(data)
-      #df.to_csv(f"simulation2_{sim+1}.csv", index = False)
+      df.to_csv(f"simulation2_{sim+1}.csv", index = False)
 
   def calc_avg_dist_squared(self):
-    self.manager.random_walk()
+    self.manager.directed_random_walk()
 
     sum_of_dists = 0
 

@@ -19,7 +19,7 @@ def plot_csv(files, x, y, name):
     plt.ylabel(y)
     plt.grid(linestyle = ":")
     plt.legend()
-    plt.savefig(name, dpi = 300)
+    #plt.savefig(name, dpi = 300)
     plt.show()
 
 csv = "simulation2_1.csv"
