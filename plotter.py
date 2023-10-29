@@ -17,6 +17,7 @@ def plot_dfs(dfs):
     plt.ylabel("Leitfähigkeit (σ)")
     plt.grid(linestyle = ":")
     plt.legend()
+    plt.save("simulation2.png")
     plt.show()
 
 def save_dfs(dfs):

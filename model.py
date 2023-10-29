@@ -140,7 +140,6 @@ class Walkermanager:
 
   def initialize_dir_walk(self):
     x, y = self.lattice.get_size()
-    self.heatmap = np.zeros((x, y))
 
     for yi in range(y):
       vertex = self.lattice.V[0][yi]
