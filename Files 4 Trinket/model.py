@@ -164,7 +164,7 @@ class Walker:
     self.pos_at_t[t] = self.vertex.Gamma
 
   def move(self, p_tunneling):
-    if self.vertex.omega == 0 and random.random() < p_tunneling:
+    if self.vertex.omega == 0 and random.random() <= p_tunneling:
       vertices = self.vertex.neighbours
     else:
       vertices = self.vertex.get_edges()
@@ -178,7 +178,7 @@ class Walker:
       self.vertex.walkers += 1
 
   def dir_move(self, p_tunneling):
-    if self.vertex.omega == 0 and random.random() < p_tunneling:
+    if self.vertex.omega == 0 and random.random() <= p_tunneling:
       vertices = self.vertex.neighbours[0:3]
     else:
       vertices = self.vertex.get_dir_edges()
