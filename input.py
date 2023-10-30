@@ -20,16 +20,7 @@ num_sims = 3
 Temp = 293
 p_tunneling = 0.05
 
-"""
 model = model.Simulation(x, y, num_walkers, num_steps, num_sims, Temp, p_tunneling)
 dfs = model.run_dir_simulations()
 plotter.save_dfs(dfs)
 plotter.plot_dfs(dfs)
-"""
-lattice = model.Lattice(50, 50)
-lattice.percolation_config(0.59)
-
-manager = model.Walkermanager(num_walkers, 200, lattice, p_tunneling)
-manager.directed_random_walk()
-
-visualization.animate_random_walk(manager)
