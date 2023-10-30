@@ -24,7 +24,4 @@ model = model.Simulation(x, y, num_walkers, num_steps, num_sims, Temp, p_tunneli
 
 dfs = model.run_simulations()
 plotter.plot_dfs(dfs) 
-
-dfs2 = model.run_dir_simulations()
-plotter.plot_dfs(dfs2)
 """
