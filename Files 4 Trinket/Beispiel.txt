@@ -1,0 +1,30 @@
+Weitere mögliche Eingaben (ohne Anführungszeichen in main.py kopieren)
+
+1. Beliebiges Gitter
+"""
+lattice = model.Lattice(x, y)
+lattice.percolation_config(p)
+visualization.plot_lattice(lattice)
+"""
+
+2. Random Walk
+"""
+lattice = model.Lattice(x, y)
+lattice.percolation_config(0.7)
+
+manager = model.Walkermanager(num_walkers, num_steps, lattice, p_tunneling)
+manager.random_walk()
+
+visualization.plot_random_walk(manager)
+"""
+
+3. Urpsprüngliche Eingabe
+"""
+model = model.Simulation(x, y, num_walkers, num_steps, num_sims, Temp, p_tunneling)
+
+dfs = model.run_simulations()
+plotter.plot_dfs(dfs) 
+
+dfs2 = model.run_dir_simulations()
+plotter.plot_dfs(dfs2)
+"""
