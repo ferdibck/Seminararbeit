@@ -18,9 +18,9 @@ def plot_dfs(dfs):
     plt.ylabel("Leitfähigkeit (σ)")
     plt.grid(linestyle = ":")
     plt.legend()
-    plt.savefig("simulation4.png", dpi = 300)
+    plt.savefig("simulation5.png", dpi = 300)
     plt.show()
 
 def save_dfs(dfs):
     for i, df in enumerate(dfs):
-        df.to_csv(f"simulation4_{i+1}", index = False)
+        df.to_csv(f"simulation5_{i+1}", index = False)
