@@ -14,8 +14,8 @@ Inputvariablen:
 
 x = 250
 y = x
-num_walkers = x*4
-num_steps = x*4
+num_walkers = x * 4
+num_steps = x * 4
 num_sims = 3
 Temp = 293
 p_tunneling = 0.05
