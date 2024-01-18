@@ -12,7 +12,7 @@ Inputvariablen:
 ▪️ p_tunneling; Tunnelwahrscheinlichkeit (s. Arbeit)
 """
 
-x = 250
+x = 50
 y = x
 num_walkers = x * 4
 num_steps = x * 4
